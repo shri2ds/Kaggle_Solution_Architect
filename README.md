@@ -1,45 +1,57 @@
 # Kaggle Solution Architect 🏆 
 An attempt to build specialized tools to solve high-stakes competitive problems.
 
-**An Agentic RAG System for Competitive Machine Learning & GenAI**
+**An Autonomous RAG Engine for Winning Signal Extraction**
 
 ## 🎯 Project Vision
-In high-stakes Kaggle competitions, the "Winning Signal" is often buried in thousands of discussion posts and public notebooks. The **Kaggle Solution Architect** is a Retrieval-Augmented Generation (RAG) platform designed to semantically index, retrieve, and synthesize winning strategies from top-tier participants.
-
-Instead of manual browsing, this architect allows for:
-- **Semantic Discovery:** Finding feature engineering tricks across different competitions.
-- **Strategy Synthesis:** Comparing CV (Cross-Validation) strategies of top-scoring notebooks.
-- **Agentic Code Generation:** Drafting high-quality starter pipelines based on "Winning Patterns."
+- The Kaggle Solution Architect is a modular Retrieval-Augmented Generation (RAG) platform that automates the "Research" phase of machine learning competitions. 
+- It scrapes high-performing notebooks, semantically indexes code/markdown cells, and synthesizes winning strategies using grounded LLM reasoning.
 
 ---
 
-## 🏗️ System Architecture
-The system follows a modular "Research-to-Reasoning" pipeline:
+## 🏗️ System Architecture: The "Flywheel" Design 
+The system is built on a Researcher-to-Reasoning pipeline that ensures the knowledge base stays fresh without manual intervention.
 
-1. **The Researcher (Ingestion):** Scrapes and cleans public Kaggle Notebooks (.ipynb) and Discussion threads.
-2. **The Librarian (Vector DB):** Utilizes `Sentence-Transformers` to embed text into a 768-dimensional vector space, stored in `ChromaDB`.
-3. **The Architect (Generator):** Uses a Quantized LLM (Llama-3/Mistral) to reason over retrieved "Winning Slices" and output actionable insights.
+1. **The Scout (Scraper Agent):** An autonomous agent that utilizes the Kaggle CLI to monitor competition leaderboards, filtering and downloading notebooks based on voteCount and metadata.
+2. **The Parser (Notebook Processor):** A specialized JSON-to-Text engine that handles the messy structure of .ipynb files, ensuring code and comments are extracted without metadata noise.
+3. **The Librarian (Vector Store):** Uses Sentence-Transformers to map code logic into a vector space, stored in a persistent ChromaDB instance for sub-second similarity search.
+4. **The Architect (Grounded Generator):** A strictly steered LLM (Llama-3.1) that uses Context Steering to reason over "Winning Slices," ensuring technical accuracy (e.g., distinguishing between base backbones and PEFT wrappers).
 
 ---
 
 ## 🚀 Technical Stack
-- **Orchestration:** LangChain / Manual Agentic Loops
-- **Vector Store:** ChromaDB
+- **Orchestration:** Python Subprocess (Agentic CLI Loops)
+- **Vector Store:** ChromaDB (Persistent Client)
 - **Embeddings:** `all-MiniLM-L6-v2` (Sentence-Transformers)
-- **Inference:** HuggingFace Pipelines (Local) / Groq API (High Speed)
-- **Data Handling:** Pandas, BeautifulSoup (for scraping)
+- **Inference Engine:** Hugging Face Inference API (Llama-3.1-8B-Instruct)
+- **Data Extraction:** Kaggle API CLI / JSON Processor
 
 ---
 
 ## 📂 Repository Structure
 ```text
 Kaggle_Solution_Architect/
-├── data/                  # Competition metadata and raw text (GitIgnored)
-├── notebooks/             # Experimental EDA and Submission runs
+├── data/                  # Persistent ChromaDB storage (GitIgnored)
+├── notebooks/             # Auto-scraped .ipynb files (The Knowledge Base)
 ├── src/
-│   ├── retriever/         # ChromaDB indexing and Similarity Search logic
-│   ├── processor/         # Notebook parsing and Markdown cleaning
-│   └── generator/         # Prompt Engineering and LLM Inference
-├── requirements.txt
-└── main.py                # Agent Entry Point
+│   ├── generator/
+│   │   └── architect.py    # LLM Prompting & Grounded Logic
+│   ├── processor/
+│   │   ├── notebook_parser.py  # JSON notebook cell extraction
+│   │   └── scraper_agent.py    # Autonomous Kaggle CLI Scout
+│   └── retriever/
+│       └── vector_store.py     # ChromaDB indexing & query logic
+├── main.py             # Entry point for the RAG Flywheel
+├── .env                # HF_TOKEN & Environment configs
+├── requirements.txt    # Project dependencies
 ```
+
+---
+
+## 🧠 Key Improvements from V1
+1. **Context Steering:** Implemented strict system prompts to prevent "Semantic Drift" and LLM hallucinations.
+2. **Security First:** Moved from hardcoded keys to ~/.kaggle/kaggle.json and .env integration.
+3. **Agentic Persistence:** The system now "closes the loop" by downloading files directly into the indexing path.
+4. **Truthfulness:** Added temperature=0.0 and groundedness checks to ensure the Architect only speaks based on the data it sees.
+
+
