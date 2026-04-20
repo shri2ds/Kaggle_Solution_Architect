@@ -3,7 +3,12 @@ from src.processor.notebook_parser import NotebookProcessor
 from src.processor.chunker import SemanticChunker
 from src.retriever.vector_store import VectorIndex
 from src.generator.architect import KaggleArchitect
+from src.processor.scraper_agent import KaggleScraper
 
+#   Scout the latest strategies
+competition = "lmsys-chatbot-arena"
+scout = KaggleScraper(competition)
+new_refs = scout.fetch_top_notebooks(limit=10)
 
 #   Parse
 # processor = NotebookProcessor("notebooks/lmsys-kerasnlp-starter.ipynb")
@@ -27,8 +32,8 @@ for filename in os.listdir(notebooks_dir):
         index.add_notebook(filename, cells)
 
 #   Retrieve the top 3 snippets
-query = "What models are being used here?"
-results = index.query(query, cell_type="code", n_results=10)
+query = "What are the models used in these notebooks?"
+results = index.query(query, cell_type="code", n_results=15)
 docs = results['documents'][0]
 
 #   DEBUG
