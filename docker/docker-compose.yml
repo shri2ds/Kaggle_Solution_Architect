@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8080:8000"
+    volumes:
+      - chroma-data:/chroma/data
+
+  neo4j:
+    image: neo4j:latest
+    ports:
+      - "7474:7474"   # HTTP Console
+      - "7687:7687"   # Bolt Driver
+    environment:
+      - NEO4J_AUTH=neo4j/secretgraph
+    volumes:
+      - neo4j-data:/data
+
+volumes:
+  chroma-data:
+  neo4j-data:

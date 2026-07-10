@@ -16,3 +16,6 @@ kaggle>=1.5.16
 
 # --- Utilities ---
 tqdm>=4.65.0
+
+# --- neo4j driver ---
+neo4j>=5.15.0
