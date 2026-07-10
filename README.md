@@ -54,4 +54,9 @@ Kaggle_Solution_Architect/
 3. **Agentic Persistence:** The system now "closes the loop" by downloading files directly into the indexing path.
 4. **Truthfulness:** Added temperature=0.0 and groundedness checks to ensure the Architect only speaks based on the data it sees.
 
+## Graph DB Current Development Strategy
+* **`src/processor/graph_extractor.py`**: Will house your structured Gemini extractor that reads raw `.ipynb` markdown/code cells and maps them to our XML-contained ontology outputs.
+* **`src/retriever/graph_store.py`**: Will manage your connection pooling, index setup, and optimized label-specific Cypher `MERGE` transactions.
+* **`src/retriever/hybrid_retriever.py`**: Will host the fusion logic—querying ChromaDB for initial code vector similarity, identifying the matching `Notebook` node, traversing its neighbors in Neo4j, and returning the structured subgraph context to `src/generator/architect.py`.
+
 
