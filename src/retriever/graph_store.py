@@ -45,14 +45,14 @@ class KaggleGraphStore:
         Parses the node and relationship JSON extraction and executes
         idempotent parameterized Cypher MERGE commands.
         """
-        # Node query lookup mapping to resolve dynamic labels safely without injection vulnerability
+        # Node query templates: We explicitly save n.id = $id on ALL nodes so relationships can link them
         node_templates = {
-            "User": "MERGE (n:User {username: $properties.username}) SET n += $properties",
+            "User": "MERGE (n:User {username: $properties.username}) SET n += $properties, n.id = $id",
             "Notebook": "MERGE (n:Notebook {id: $id}) SET n += $properties",
-            "Model": "MERGE (n:Model {name: $properties.name}) SET n += $properties",
-            "Library": "MERGE (n:Library {name: $properties.name}) SET n += $properties",
-            "Dataset": "MERGE (n:Dataset {name: $properties.name}) SET n += $properties",
-            "Hardware": "MERGE (n:Hardware {type: $properties.type}) SET n += $properties"
+            "Model": "MERGE (n:Model {name: $properties.name}) SET n += $properties, n.id = $id",
+            "Library": "MERGE (n:Library {name: $properties.name}) SET n += $properties, n.id = $id",
+            "Dataset": "MERGE (n:Dataset {name: $properties.name}) SET n += $properties, n.id = $id",
+            "Hardware": "MERGE (n:Hardware {type: $properties.type}) SET n += $properties, n.id = $id"
         }
 
         with self.driver.session() as session:
@@ -72,10 +72,10 @@ class KaggleGraphStore:
                 source_id = rel["source_id"]
                 target_id = rel["target_id"]
 
-                # Parameterized label-aware merge query to avoid slow AllNodesScan
+                # Parameterized label-aware merge query linking directly on the mapped extraction IDs
                 cypher_rel = f"""
-                MATCH (source) WHERE source.username = $source_id OR source.id = $source_id OR source.name = $source_id OR source.type = $source_id
-                MATCH (target) WHERE target.username = $target_id OR target.id = $target_id OR target.name = $target_id OR target.type = $target_id
+                MATCH (source) WHERE source.id = $source_id
+                MATCH (target) WHERE target.id = $target_id
                 MERGE (source)-[r:{rel_type}]->(target)
                 """
                 session.run(cypher_rel, source_id=source_id, target_id=target_id)
