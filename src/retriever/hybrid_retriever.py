@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 import os
-from NLP.Kaggle_Solution_Architect.src.retriever.graph_store import KaggleGraphStore
+from Kaggle_Solution_Architect.src.retriever.graph_store import KaggleGraphStore
 
 class KaggleHybridRetriever:
     """
