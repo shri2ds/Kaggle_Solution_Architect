@@ -3,7 +3,7 @@ import re
 import json
 import requests
 from typing import List, Dict, Any
-from NLP.Kaggle_Solution_Architect.src.retriever.graph_store import KaggleGraphStore
+from Kaggle_Solution_Architect.src.retriever.graph_store import KaggleGraphStore
 
 class TextToCypherAgent:
     """
